@@ -1,0 +1,21 @@
+{
+    "name": "lcarr/football-api-sdk",
+    "description": "software development kit for a football api",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Lcarr\\FootballApiSdk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lcarr\\FootballApiSdk\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
