@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 class ApiSportsClient implements FootballApiClientInterface
 {
     private const BASE_URL = 'https://v3.football.api-sports.io/';
+
     private Client $client;
 
     public function __construct()
