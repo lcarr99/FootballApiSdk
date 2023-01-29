@@ -2,8 +2,8 @@
 
 namespace Lcarr\FootballApiSdk\Clients;
 
+use Lcarr\FootballApiSdk\Clients\Methods\ClientMethodFactory;
 use Lcarr\FootballApiSdk\FootballApiSdkException;
-use Psr\Http\Message\ResponseInterface;
 
 class FootballApiClient implements FootballApiClientInterface
 {
@@ -12,13 +12,19 @@ class FootballApiClient implements FootballApiClientInterface
 
     public function __construct(array $config)
     {
+        if (!isset($config['client-method'])) {
+            throw new FootballApiSdkException('Please pass the client method');
+        }
+
+        $clientMethod = ClientMethodFactory::createClientMethod($config['client-method']);
+
         if (!isset($config['api-client'])) {
             throw new FootballApiSdkException(
                 'Please make sure api-client is set in config and value is either api-client or api-sports.'
             );
         }
 
-        $this->client = FootballApiClientFactory::createApiClient($config['api-client']);
+        $this->client = FootballApiClientFactory::createApiClient($config['api-client'], $clientMethod);
 
         if ($this->client instanceof RapidApiClient) {
             if (!isset($config['rapid-api-host'])) {
@@ -46,10 +52,9 @@ class FootballApiClient implements FootballApiClientInterface
         }
     }
 
-    public function send(string $url, array $options = []): ResponseInterface
+    public function send(string $method, string $url, array $options = []): array
     {
         $options['headers'] = $this->headers;
-
-        return $this->client->send($url, $options);
+        return $this->client->send($method, $url, $options);
     }
 }

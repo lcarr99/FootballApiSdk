@@ -2,33 +2,22 @@
 
 namespace Lcarr\FootballApiSdk\Clients;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Lcarr\FootballApiSdk\Api\Exceptions\FootballApiException;
-use Psr\Http\Message\ResponseInterface;
+use Lcarr\FootballApiSdk\Clients\Methods\ClientMethod;
+use Lcarr\FootballApiSdk\Clients\Requests\RequestFactory;
 
 class ApiSportsClient implements FootballApiClientInterface
 {
     private const BASE_URL = 'https://v3.football.api-sports.io/';
 
-    private Client $client;
+    private ClientMethod $clientMethod;
 
-    public function __construct()
+    public function __construct(ClientMethod $clientMethod)
     {
-        $this->client = new Client(['base_uri' => self::BASE_URL]);
+        $this->clientMethod = $clientMethod;
     }
 
-    public function send(string $url, array $options): ResponseInterface
+    public function send(string $method, string $url, array $options): array
     {
-        try {
-            return $this->client->request('GET', $url, $options);
-        } catch (GuzzleException $guzzleException) {
-            throw new FootballApiException(
-                $guzzleException->getRequest()->getUri(),
-                $guzzleException->getResponse()->getBody(),
-                $guzzleException->getResponse()->getStatusCode(),
-                $options
-            );
-        }
+        return $this->clientMethod->send(RequestFactory::createRequest($method, self::BASE_URL . $url, $options));
     }
 }

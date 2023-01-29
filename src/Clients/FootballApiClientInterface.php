@@ -2,9 +2,7 @@
 
 namespace Lcarr\FootballApiSdk\Clients;
 
-use Psr\Http\Message\ResponseInterface;
-
 interface FootballApiClientInterface
 {
-    public function send(string $url, array $options): ResponseInterface;
+    public function send(string $method, string $url, array $options): array;
 }

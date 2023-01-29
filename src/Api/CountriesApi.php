@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcarr\FootballApiSDK\Api;
+namespace Lcarr\FootballApiSdk\Api;
 
 use Lcarr\FootballApiSdk\Api\Models\CountriesModel;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
@@ -18,29 +18,32 @@ class CountriesApi
 
     public function ofName(string $name): CountriesModel
     {
-        $response = $this->client->send(self::COUNTRIES_URL, ['query' => ['name' => $name]]);
+        $url = self::COUNTRIES_URL . '?' . http_build_query(['name' => $name]);
+        $response = $this->client->send('GET', $url);
 
-        return new CountriesModel(json_decode($response->getBody()->getContents(), true));
+        return new CountriesModel($response);
     }
 
     public function ofCode(string $code): CountriesModel
     {
-        $response = $this->client->send(self::COUNTRIES_URL, ['query' => ['code' => $code]]);
+        $url = self::COUNTRIES_URL . '?' . http_build_query(['code' => $code]);
+        $response = $this->client->send('GET', $url);
 
-        return new CountriesModel(json_decode($response->getBody()->getContents(), true));
+        return new CountriesModel($response);
     }
 
     public function search(string $searchTerm): CountriesModel
     {
-        $response = $this->client->send(self::COUNTRIES_URL, ['query' => ['search' => $searchTerm]]);
+        $url = self::COUNTRIES_URL . '?' . http_build_query(['search' => $searchTerm]);
+        $response = $this->client->send('GET', $url);
 
-        return new CountriesModel(json_decode($response->getBody()->getContents(), true));
+        return new CountriesModel($response);
     }
 
     public function all(): CountriesModel
     {
-        $response = $this->client->send(self::COUNTRIES_URL);
+        $response = $this->client->send('GET', self::COUNTRIES_URL);
 
-        return new CountriesModel(json_decode($response->getBody()->getContents(), true));
+        return new CountriesModel($response);
     }
 }
