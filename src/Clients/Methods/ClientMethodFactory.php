@@ -9,7 +9,7 @@ class ClientMethodFactory
 {
     public static function createClientMethod(string $methodName): ClientMethod
     {
-        if ($methodName === 'curl') {
+        if ($methodName === ClientMethods::CURL_METHOD) {
             if (!extension_loaded('curl')) {
                 throw new FootballApiSdkException('Please make sure you have the curl extension loaded.');
             }
@@ -17,10 +17,10 @@ class ClientMethodFactory
             return new CurlMethod();
         }
 
-        if ($methodName === 'guzzle') {
+        if ($methodName === ClientMethods::GUZZLE_METHOD) {
             return new GuzzleMethod();
         }
 
-        throw new InvalidArgumentException('Please pass a valid client name, refer to documentation.');
+        throw new InvalidArgumentException('Please pass a valid client name, refer to the documentation.');
     }
 }

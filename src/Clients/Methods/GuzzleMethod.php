@@ -19,8 +19,8 @@ class GuzzleMethod implements ClientMethod
     public function send(Request $request): array
     {
         try {
-            $options = $request->getOptions();
-            $guzzleOptions = ['headers' => $options['headers']];
+            $headers = $request->getHeaders();
+            $guzzleOptions = ['headers' => $headers->getHeaders()];
 
             $response = $this->client->request($request->getMethod(), $request->getUrl(), $guzzleOptions);
 

@@ -3,15 +3,16 @@
 namespace Lcarr\FootballApiSdk\Api\Exceptions;
 
 use Exception;
+use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 
 class FootballApiException extends Exception
 {
     private string $url;
     private array $body;
     private int $statusCode;
-    private array $headers;
+    private Headers $headers;
 
-    public function __construct(string $url, array $body, int $statusCode, array $headers)
+    public function __construct(string $url, array $body, int $statusCode, Headers $headers)
     {
         $this->url = $url;
         $this->body = $body;
@@ -48,7 +49,7 @@ class FootballApiException extends Exception
     /**
      * @return array
      */
-    public function getHeaders(): array
+    public function getHeaders(): Headers
     {
         return $this->headers;
     }

@@ -7,12 +7,12 @@ class GetRequest implements Request
     private const METHOD = 'GET';
 
     private string $url;
-    private array $options;
+    private Headers $headers;
 
-    public function __construct(string $url,  array $options)
+    public function __construct(string $url, Headers $headers)
     {
         $this->url = $url;
-        $this->options = $options;
+        $this->headers = $headers;
     }
 
     public function getMethod(): string
@@ -30,8 +30,8 @@ class GetRequest implements Request
         return [];
     }
 
-    public function getOptions(): array
+    public function getHeaders(): Headers
     {
-        return $this->options;
+        return $this->headers;
     }
 }

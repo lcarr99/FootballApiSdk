@@ -4,6 +4,7 @@ namespace Lcarr\FootballApiSdk\Clients\Methods;
 
 use Lcarr\FootballApiSdk\Api\Exceptions\FootballApiException;
 use Lcarr\FootballApiSdk\Clients\FootballCurl;
+use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 use Lcarr\FootballApiSdk\Clients\Requests\Request;
 
 class CurlMethod implements ClientMethod
@@ -22,10 +23,10 @@ class CurlMethod implements ClientMethod
 
     public function send(Request $request): array
     {
-        $options = $request->getOptions();
+        $headers = $request->getHeaders();
 
         $curlOptions = [
-            CURLOPT_HTTPHEADER => $this->formatHeaders($options['headers'] ?? []),
+            CURLOPT_HTTPHEADER => $this->formatHeaders($headers),
             CURLOPT_URL => $request->getUrl(),
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
@@ -33,19 +34,21 @@ class CurlMethod implements ClientMethod
 
         $this->footballCurl->setOptions($curlOptions);
 
+        $response = $this->footballCurl->getResponse();
+
         if ($this->footballCurl->hasError()) {
             throw new FootballApiException(
                 $request->getUrl(),
                 $this->footballCurl->getResponse(),
                 $this->footballCurl->getOption(CURLINFO_RESPONSE_CODE),
-                $options['headers']
+                $headers
             );
         }
 
-        return $this->footballCurl->getResponse();
+        return $response;
     }
 
-    private function formatHeaders(array $headers)
+    private function formatHeaders(Headers $headers): array
     {
         $formattedHeaders = [];
 
