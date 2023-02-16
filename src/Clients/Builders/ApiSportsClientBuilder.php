@@ -2,6 +2,7 @@
 
 namespace Lcarr\FootballApiSdk\Clients\Builders;
 
+use JetBrains\PhpStorm\Pure;
 use Lcarr\FootballApiSdk\Clients\ApiSportsClient;
 use Lcarr\FootballApiSdk\Clients\FootballApiClientInterface;
 use Lcarr\FootballApiSdk\Clients\FootballApiConfig;

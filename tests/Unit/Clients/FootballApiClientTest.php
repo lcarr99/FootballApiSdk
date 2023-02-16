@@ -18,6 +18,8 @@ class FootballApiClientTest extends TestCase
         $this->assertTrue(true);
     }
 
+
+
     public function validConfigCases()
     {
         return [

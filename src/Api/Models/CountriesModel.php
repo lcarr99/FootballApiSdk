@@ -1,62 +1,70 @@
 <?php
 
-namespace Lcarr\FootballApiSDK\Api\Models;
+namespace Lcarr\FootballApiSdk\Api\Models;
 
-use Lcarr\FootballApiSdk\Api\Entities\Country;
+use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
+use Lcarr\FootballApiSdk\Api\Entities\Countries\Country;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiErrorInterface;
+use Lcarr\FootballApiSdk\Api\Entities\Parameters;
+use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 
 class CountriesModel
 {
-    private string $collectionName;
-    private array $parameters;
-    private array $errors;
-    private int $resultCount;
+    private CollectionName $collectionName;
+    private Parameters $parameters;
+    private FootballApiErrorInterface $errors;
+    private ResultsCount $resultCount;
     private array $countries;
 
     public function __construct(array $countryResponseData)
     {
-        $this->collectionName = $countryResponseData['get'];
-        $this->parameters = $countryResponseData['parameters'];
-        $this->errors = $countryResponseData['errors'];
-        $this->resultCount = $countryResponseData['results'];
+        $this->collectionName = new CollectionName($countryResponseData['get']);
+        $this->parameters = new Parameters($countryResponseData['parameters']);
+        $this->errors = empty($countryResponseData['errors']) ? new EmptyFootballApiError() : new FootballApiError(
+            $countryResponseData['errors']
+        );
+        $this->resultCount = new ResultsCount($countryResponseData['results']);
         $this->countries = array_map(function ($countryData) {
             return new Country($countryData);
         }, $countryResponseData['response']);
     }
 
     /**
-     * @return string
+     * @return CollectionName
      */
-    public function getCollectionName(): string
+    public function getCollectionName(): CollectionName
     {
         return $this->collectionName;
     }
 
     /**
-     * @return array
+     * @return Parameters
      */
-    public function getParameters(): array
+    public function getParameters(): Parameters
     {
         return $this->parameters;
     }
 
     /**
-     * @return array
+     * @return FootballApiErrorInterface
      */
-    public function getErrors(): array
+    public function getErrors(): FootballApiErrorInterface
     {
         return $this->errors;
     }
 
     /**
-     * @return int
+     * @return ResultsCount
      */
-    public function getResultCount(): int
+    public function getResultCount(): ResultsCount
     {
         return $this->resultCount;
     }
 
     /**
-     * @return array
+     * @return Country[]
      */
     public function getCountries(): array
     {

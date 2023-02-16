@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcarr\FootballApiSDK\Api\Entities;
+namespace Lcarr\FootballApiSDK\Api\Entities\Countries;
 
 class Country
 {

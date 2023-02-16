@@ -7,9 +7,6 @@ use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 
 class CountriesApi
 {
-    /**
-     *
-     */
     private const COUNTRIES_URL = 'countries';
 
     /**

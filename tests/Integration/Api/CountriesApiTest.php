@@ -1,6 +1,7 @@
 <?php
 
 use Lcarr\FootballApiSdk\Api\CountriesApi;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 use PHPUnit\Framework\TestCase;
 
@@ -22,9 +23,9 @@ class CountriesApiTest extends TestCase
         $countriesResponse = $countriesApi->ofName($countryName);
 
         $this->assertSame(1, count($countriesResponse->getCountries()));
-        $this->assertSame(1, $countriesResponse->getResultCount());
-        $this->assertEmpty($countriesResponse->getErrors());
-        $this->assertSame('countries', $countriesResponse->getCollectionName());
+        $this->assertSame(1, $countriesResponse->getResultCount()->count());
+        $this->assertInstanceOf(EmptyFootballApiError::class, $countriesResponse->getErrors());
+        $this->assertSame('countries', $countriesResponse->getCollectionName()->getCollectionName());
     }
 
     public function sampleCountryApiOfNameResponseArrays(): array
