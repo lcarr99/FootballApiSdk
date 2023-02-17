@@ -2,7 +2,9 @@
 
 namespace Lcarr\FootballApiSdk\Api\Entities;
 
-class Parameters
+use Countable;
+
+class Parameters implements Countable
 {
     private array $parameters;
 
@@ -14,5 +16,10 @@ class Parameters
     public function getParameter(string $name): ?string
     {
         return $this->parameters[$name] ?? null;
+    }
+
+    public function count(): int
+    {
+        return count($this->parameters);
     }
 }

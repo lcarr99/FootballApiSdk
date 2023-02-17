@@ -2,6 +2,7 @@
 
 namespace Lcarr\FootballApiSdk\Api\Models;
 
+use Lcarr\FootballApiSdk\Api\Entities\Collections\CountryCollection;
 use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
 use Lcarr\FootballApiSdk\Api\Entities\Countries\Country;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiErrorInterface;
@@ -16,7 +17,7 @@ class CountriesModel
     private Parameters $parameters;
     private FootballApiErrorInterface $errors;
     private ResultsCount $resultCount;
-    private array $countries;
+    private CountryCollection $countries;
 
     public function __construct(array $countryResponseData)
     {
@@ -26,9 +27,9 @@ class CountriesModel
             $countryResponseData['errors']
         );
         $this->resultCount = new ResultsCount($countryResponseData['results']);
-        $this->countries = array_map(function ($countryData) {
+        $this->countries = new CountryCollection(array_map(function ($countryData) {
             return new Country($countryData);
-        }, $countryResponseData['response']);
+        }, $countryResponseData['response']));
     }
 
     /**
@@ -64,9 +65,9 @@ class CountriesModel
     }
 
     /**
-     * @return Country[]
+     * @return CountryCollection
      */
-    public function getCountries(): array
+    public function getCountries(): CountryCollection
     {
         return $this->countries;
     }
