@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class CountriesApiTest extends TestCase
 {
-    private $footballApiClient;
-    private $countriesApi;
+    private FootballApiClient $footballApiClient;
+    private CountriesApi $countriesApi;
 
     protected function setUp(): void
     {
