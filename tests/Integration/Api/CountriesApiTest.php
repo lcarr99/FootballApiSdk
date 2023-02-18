@@ -31,7 +31,6 @@ class CountriesApiTest extends TestCase
         $this->assertSame(1, $countriesResponse->getResultCount()->count());
         $this->assertInstanceOf(EmptyFootballApiError::class, $countriesResponse->getErrors());
         $this->assertSame('countries', $countriesResponse->getCollectionName()->getCollectionName());
-        echo json_encode($countriesResponse);
     }
 
     /**
