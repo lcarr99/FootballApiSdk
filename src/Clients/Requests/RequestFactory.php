@@ -6,6 +6,12 @@ use InvalidArgumentException;
 
 class RequestFactory
 {
+    /**
+     * @param string $method
+     * @param string $url
+     * @param Headers $headers
+     * @return Request
+     */
     public static function createRequest(string $method, string $url, Headers $headers): Request
     {
         if (strtoupper($method) === RequestMethods::GET) {

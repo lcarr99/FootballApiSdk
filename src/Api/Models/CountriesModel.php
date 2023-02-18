@@ -14,10 +14,25 @@ use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 
 class CountriesModel implements JsonSerializable
 {
+    /**
+     * @var CollectionName
+     */
     private CollectionName $collectionName;
+    /**
+     * @var Parameters
+     */
     private Parameters $parameters;
+    /**
+     * @var FootballApiErrorInterface
+     */
     private FootballApiErrorInterface $errors;
+    /**
+     * @var ResultsCount
+     */
     private ResultsCount $resultCount;
+    /**
+     * @var CountryCollection
+     */
     private CountryCollection $countries;
 
     public function __construct(array $countryResponseData)

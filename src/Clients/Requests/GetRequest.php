@@ -6,30 +6,36 @@ class GetRequest implements Request
 {
     private const METHOD = 'GET';
 
-    private string $url;
-    private Headers $headers;
+    public function __construct(private string $url, private Headers $headers)
+    {}
 
-    public function __construct(string $url, Headers $headers)
-    {
-        $this->url = $url;
-        $this->headers = $headers;
-    }
-
+    /**
+     * @return string
+     */
     public function getMethod(): string
     {
         return self::METHOD;
     }
 
+    /**
+     * @return string
+     */
     public function getUrl(): string
     {
         return $this->url;
     }
 
+    /**
+     * @return array
+     */
     public function getBody(): array
     {
         return [];
     }
 
+    /**
+     * @return Headers
+     */
     public function getHeaders(): Headers
     {
         return $this->headers;
