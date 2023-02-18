@@ -15,7 +15,7 @@ class Parameters implements Countable, JsonSerializable
     public function __construct(array $parameters)
     {
         foreach ($parameters as $name => $value) {
-            $parameters[] = new Parameter($name, $value);
+            $this->parameters[] = new Parameter($name, $value);
         }
     }
 
