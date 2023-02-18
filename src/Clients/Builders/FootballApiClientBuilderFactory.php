@@ -4,16 +4,21 @@ namespace Lcarr\FootballApiSdk\Clients\Builders;
 
 use InvalidArgumentException;
 use Lcarr\FootballApiSdk\Clients\ApiClients;
+use Lcarr\FootballApiSdk\Clients\FootballApiConfig;
 
 class FootballApiClientBuilderFactory
 {
-    public static function createFootballApiClientBuilder(string $apiClientName): FootballApiClientBuilder
+    /**
+     * @param FootballApiConfig $footballApiConfig
+     * @return FootballApiClientBuilder
+     */
+    public static function createFootballApiClientBuilder(FootballApiConfig $footballApiConfig): FootballApiClientBuilder
     {
-        if ($apiClientName === ApiClients::RAPID_API) {
+        if ($footballApiConfig['api-client'] === ApiClients::RAPID_API) {
             return new RapidApiClientBuilder();
         }
 
-        if ($apiClientName === ApiClients::API_SPORTS) {
+        if ($footballApiConfig['api-client'] === ApiClients::API_SPORTS) {
             return new ApiSportsClientBuilder();
         }
 

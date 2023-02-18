@@ -10,15 +10,14 @@ class ApiSportsClient implements FootballApiClientInterface
 {
     private const BASE_URL = 'https://v3.football.api-sports.io/';
 
-    private ClientMethod $clientMethod;
-    private Headers $headers;
+    public function __construct(private ClientMethod $clientMethod, private Headers $headers)
+    {}
 
-    public function __construct(ClientMethod $clientMethod, Headers $headers)
-    {
-        $this->clientMethod = $clientMethod;
-        $this->headers = $headers;
-    }
-
+    /**
+     * @param string $method
+     * @param string $url
+     * @return array
+     */
     public function send(string $method, string $url): array
     {
         return $this->clientMethod->send(RequestFactory::createRequest($method, self::BASE_URL . $url, $this->headers));
