@@ -10,6 +10,6 @@ use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 interface FootballApiClientBuilder
 {
     public function addClientMethod(ClientMethod $clientMethod): void;
-    public function addHeadersFromConfig(FootballApiConfig $config);
+    public function addHeadersFromConfig(FootballApiConfig $config): void;
     public function getFootballApiClient(): FootballApiClientInterface;
 }

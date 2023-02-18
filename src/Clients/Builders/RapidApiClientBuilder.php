@@ -11,30 +11,44 @@ use Lcarr\FootballApiSdk\FootballApiSdkException;
 
 class RapidApiClientBuilder implements FootballApiClientBuilder
 {
+    /**
+     * @var ClientMethod
+     */
     private ClientMethod $clientMethod;
+    /**
+     * @var Headers
+     */
     private Headers $headers;
 
+    /**
+     * @param ClientMethod $clientMethod
+     */
     public function addClientMethod(ClientMethod $clientMethod): void
     {
         $this->clientMethod = $clientMethod;
     }
 
-    public function addHeadersFromConfig(FootballApiConfig $config)
+    /**
+     * @param FootballApiConfig $config
+     * @throws FootballApiSdkException
+     */
+    public function addHeadersFromConfig(FootballApiConfig $config): void
     {
-        if (!isset($config['rapid-api-host'])) {
-            throw new FootballApiSdkException('Please make sure the rapid-api-host is set in the config.');
-        }
-
-        if (!isset($config['rapid-api-key'])) {
-            throw new FootballApiSdkException('Please make sure the rapid-api-key is set in the config.');
-        }
-
+        $config['rapid-api-host'] ?? throw new FootballApiSdkException(
+            'Please make sure the rapid-api-host is set in the config.'
+        );
+        $config['rapid-api-key'] ?? throw new FootballApiSdkException(
+            'Please make sure the rapid-api-key is set in the config.'
+        );
         $this->headers = new Headers([
             'X-RapidAPI-Key' => $config['rapid-api-key'],
             'X-RapidAPI-Host' => $config['rapid-api-host'],
         ]);
     }
 
+    /**
+     * @return FootballApiClientInterface
+     */
     public function getFootballApiClient(): FootballApiClientInterface
     {
         return new RapidApiClient($this->clientMethod, $this->headers);
