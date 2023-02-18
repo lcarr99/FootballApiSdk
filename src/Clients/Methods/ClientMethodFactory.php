@@ -7,12 +7,17 @@ use Lcarr\FootballApiSdk\FootballApiSdkException;
 
 class ClientMethodFactory
 {
+    /**
+     * @param string $methodName
+     * @return ClientMethod
+     * @throws FootballApiSdkException
+     */
     public static function createClientMethod(string $methodName): ClientMethod
     {
         if ($methodName === ClientMethods::CURL_METHOD) {
-            if (!extension_loaded('curl')) {
-                throw new FootballApiSdkException('Please make sure you have the curl extension loaded.');
-            }
+            extension_loaded('curl') ?? throw new FootballApiSdkException(
+                'Please make sure you have the curl extension loaded in your php.ini'
+            );
 
             return new CurlMethod();
         }

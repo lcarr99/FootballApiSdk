@@ -9,18 +9,19 @@ use Lcarr\FootballApiSdk\Clients\Requests\Request;
 
 class CurlMethod implements ClientMethod
 {
-    private FootballCurl $footballCurl;
-
-    public function __construct(FootballCurl $footballCurl = null)
-    {
-        $this->footballCurl = $footballCurl ?? new FootballCurl();
-    }
+    public function __construct(private FootballCurl $footballCurl)
+    {}
 
     public function __destruct()
     {
         $this->footballCurl->close();
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     * @throws FootballApiException
+     */
     public function send(Request $request): array
     {
         $headers = $request->getHeaders();
@@ -48,6 +49,10 @@ class CurlMethod implements ClientMethod
         return $response;
     }
 
+    /**
+     * @param Headers $headers
+     * @return array
+     */
     private function formatHeaders(Headers $headers): array
     {
         $formattedHeaders = [];

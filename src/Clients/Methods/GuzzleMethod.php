@@ -9,13 +9,16 @@ use Lcarr\FootballApiSdk\Clients\Requests\Request;
 
 class GuzzleMethod implements ClientMethod
 {
-    private Client $client;
-
-    public function __construct()
+    public function __construct(private Client|null $client = null)
     {
-        $this->client = new Client();
+        $this->client = $this->client ?? new Client();
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     * @throws FootballApiException
+     */
     public function send(Request $request): array
     {
         try {
