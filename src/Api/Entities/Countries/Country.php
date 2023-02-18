@@ -4,25 +4,30 @@ namespace Lcarr\FootballApiSDK\Api\Entities\Countries;
 
 class Country
 {
-    private array $container;
+    public function __construct(private array $countryData)
+    {}
 
-    public function __construct(array $countryData)
-    {
-        $this->container = $countryData;
-    }
-
+    /**
+     * @return string
+     */
     public function getName(): string
     {
-        return $this->container['name'];
+        return $this->countryData['name'];
     }
 
+    /**
+     * @return string
+     */
     public function getCode(): string
     {
-        return $this->container['code'];
+        return $this->countryData['code'];
     }
 
+    /**
+     * @return string
+     */
     public function getFlagUrl(): string
     {
-        return $this->container['flag'];
+        return $this->countryData['flag'];
     }
 }

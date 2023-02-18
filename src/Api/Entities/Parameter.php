@@ -4,25 +4,10 @@ namespace Lcarr\FootballApiSdk\Api\Entities;
 
 class Parameter
 {
-    /**
-     * @var string
-     */
-    private string $name;
-
-    /**
-     * @var string
-     */
-    private string $value;
-
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    public function __construct(string $name, string $value)
-    {
-        $this->name = $name;
-        $this->value = $value;
-    }
+    public function __construct(
+        private string $name,
+        private string $value
+    ) {}
 
     /**
      * @return string

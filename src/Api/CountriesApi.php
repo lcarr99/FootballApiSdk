@@ -9,18 +9,8 @@ class CountriesApi
 {
     private const COUNTRIES_URL = 'countries';
 
-    /**
-     * @var FootballApiClient
-     */
-    private FootballApiClient $client;
-
-    /**
-     * @param FootballApiClient $footballApiClient
-     */
-    public function __construct(FootballApiClient $footballApiClient)
-    {
-        $this->client = $footballApiClient;
-    }
+    public function __construct(Private FootballApiClient $footballApiClient)
+    {}
 
     /**
      * @param string $name
@@ -29,7 +19,7 @@ class CountriesApi
     public function ofName(string $name): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['name' => $name]);
-        $response = $this->client->send('GET', $url);
+        $response = $this->footballApiClient->send('GET', $url);
         return new CountriesModel($response);
     }
 
@@ -40,7 +30,7 @@ class CountriesApi
     public function ofCode(string $code): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['code' => $code]);
-        $response = $this->client->send('GET', $url);
+        $response = $this->footballApiClient->send('GET', $url);
 
         return new CountriesModel($response);
     }
@@ -52,7 +42,7 @@ class CountriesApi
     public function search(string $searchTerm): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['search' => $searchTerm]);
-        $response = $this->client->send('GET', $url);
+        $response = $this->footballApiClient->send('GET', $url);
 
         return new CountriesModel($response);
     }
@@ -62,7 +52,7 @@ class CountriesApi
      */
     public function all(): CountriesModel
     {
-        $response = $this->client->send('GET', self::COUNTRIES_URL);
+        $response = $this->footballApiClient->send('GET', self::COUNTRIES_URL);
 
         return new CountriesModel($response);
     }

@@ -4,13 +4,12 @@ namespace Lcarr\FootballApiSdk\Api\Entities;
 
 class CollectionName
 {
-    private string $collectionName;
+    public function __construct(private string $collectionName)
+    {}
 
-    public function __construct(string $collectionName)
-    {
-        $this->collectionName = $collectionName;
-    }
-
+    /**
+     * @return string
+     */
     public function getCollectionName(): string
     {
         return $this->collectionName;

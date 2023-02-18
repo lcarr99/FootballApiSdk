@@ -7,22 +7,34 @@ use JsonSerializable;
 
 class EmptyFootballApiError implements FootballApiErrorInterface, JsonSerializable
 {
+    /**
+     * @return string
+     */
     public function getMessage(): string
     {
         return '';
     }
 
+    /**
+     * @return string
+     */
     public function getReport(): string
     {
         return '';
     }
 
-    public function getDateTimeImmutable(): ?DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getDateTimeImmutable(): DateTimeImmutable|null
     {
         return null;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed
     {
         return [];
     }

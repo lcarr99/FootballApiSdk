@@ -6,13 +6,12 @@ use Countable;
 
 class ResultsCount implements Countable
 {
-    private int $resultCount;
+    public function __construct(private int $resultCount)
+    {}
 
-    public function __construct(int $resultCount)
-    {
-        $this->resultCount = $resultCount;
-    }
-
+    /**
+     * @return int
+     */
     public function count(): int
     {
         return $this->resultCount;

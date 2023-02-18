@@ -9,42 +9,56 @@ use Lcarr\FootballApiSDK\Api\Entities\Countries\Country;
 
 class CountryCollection implements Countable, ArrayAccess, JsonSerializable
 {
+    public function __construct(private array $countries)
+    {}
+
     /**
-     * @var Country[]
+     * @return int
      */
-    private array $countries;
-
-    public function __construct(array $countries)
-    {
-        $this->countries = $countries;
-    }
-
     public function count(): int
     {
         return count($this->countries);
     }
 
-    public function offsetExists($offset): bool
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->countries[$offset]);
     }
 
-    public function offsetGet($offset)
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->countries[$offset] ?? null;
     }
 
-    public function offsetSet($offset, $value): void
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->countries[$offset] = $value;
     }
 
-    public function offsetUnset($offset): void
+    /**
+     * @param mixed $offset
+     */
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->countries[$offset]);
     }
 
-    public function jsonSerialize()
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed
     {
         return array_map(function (Country $country) {
             return [

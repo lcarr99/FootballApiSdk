@@ -3,34 +3,44 @@
 namespace Lcarr\FootballApiSdk\Api\Entities\Errors;
 
 use DateTimeImmutable;
+use Exception;
 use JsonSerializable;
 
 class FootballApiError implements FootballApiErrorInterface, JsonSerializable
 {
-    private array $container;
+    public function __construct(private array $error)
+    {}
 
-    public function __construct(array $errors)
+    /**
+     * @return DateTimeImmutable|null
+     * @throws Exception
+     */
+    public function getDateTimeImmutable(): DateTimeImmutable|null
     {
-        $this->container = $errors;
+        return new DateTimeImmutable($this->error['time']);
     }
 
-    public function getDateTimeImmutable(): ?DateTimeImmutable
-    {
-        return new DateTimeImmutable($this->container['time']);
-    }
-
+    /**
+     * @return string
+     */
     public function getMessage(): string
     {
-        return $this->container['bug'] ?? '';
+        return $this->error['bug'] ?? '';
     }
 
+    /**
+     * @return string
+     */
     public function getReport(): string
     {
-        return $this->container['report'] ?? '';
+        return $this->error['report'] ?? '';
     }
 
-    public function jsonSerialize()
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed
     {
-        return $this->container;
+        return $this->error;
     }
 }

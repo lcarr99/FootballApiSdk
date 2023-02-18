@@ -74,9 +74,9 @@ class CountriesModel implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return [
             'collection' => $this->collectionName->getCollectionName(),
