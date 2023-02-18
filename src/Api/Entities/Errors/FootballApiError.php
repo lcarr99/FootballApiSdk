@@ -3,8 +3,9 @@
 namespace Lcarr\FootballApiSdk\Api\Entities\Errors;
 
 use DateTimeImmutable;
+use JsonSerializable;
 
-class FootballApiError implements FootballApiErrorInterface
+class FootballApiError implements FootballApiErrorInterface, JsonSerializable
 {
     private array $container;
 
@@ -26,5 +27,10 @@ class FootballApiError implements FootballApiErrorInterface
     public function getReport(): string
     {
         return $this->container['report'] ?? '';
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->container;
     }
 }

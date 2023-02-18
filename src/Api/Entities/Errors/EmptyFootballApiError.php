@@ -3,8 +3,9 @@
 namespace Lcarr\FootballApiSdk\Api\Entities\Errors;
 
 use DateTimeImmutable;
+use JsonSerializable;
 
-class EmptyFootballApiError implements FootballApiErrorInterface
+class EmptyFootballApiError implements FootballApiErrorInterface, JsonSerializable
 {
     public function getMessage(): string
     {
@@ -19,5 +20,10 @@ class EmptyFootballApiError implements FootballApiErrorInterface
     public function getDateTimeImmutable(): ?DateTimeImmutable
     {
         return null;
+    }
+
+    public function jsonSerialize()
+    {
+        return [];
     }
 }

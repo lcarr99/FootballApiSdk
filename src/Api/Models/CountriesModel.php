@@ -2,6 +2,7 @@
 
 namespace Lcarr\FootballApiSdk\Api\Models;
 
+use JsonSerializable;
 use Lcarr\FootballApiSdk\Api\Entities\Collections\CountryCollection;
 use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
 use Lcarr\FootballApiSdk\Api\Entities\Countries\Country;
@@ -11,7 +12,7 @@ use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 
-class CountriesModel
+class CountriesModel implements JsonSerializable
 {
     private CollectionName $collectionName;
     private Parameters $parameters;
@@ -70,5 +71,19 @@ class CountriesModel
     public function getCountries(): CountryCollection
     {
         return $this->countries;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'collection' => $this->collectionName->getCollectionName(),
+            'parameter' => $this->getParameters(),
+            'errors' => $this->getErrors(),
+            'resultCount' => $this->resultCount->count(),
+            'countries' => $this->countries,
+        ];
     }
 }

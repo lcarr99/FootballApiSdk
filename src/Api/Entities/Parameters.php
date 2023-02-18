@@ -3,23 +3,53 @@
 namespace Lcarr\FootballApiSdk\Api\Entities;
 
 use Countable;
+use JsonSerializable;
 
-class Parameters implements Countable
+class Parameters implements Countable, JsonSerializable
 {
-    private array $parameters;
+    /**
+     * @var Parameter[]
+     */
+    private array $parameters = [];
 
     public function __construct(array $parameters)
     {
-        $this->parameters = $parameters;
+        foreach ($parameters as $name => $value) {
+            $parameters[] = new Parameter($name, $value);
+        }
     }
 
-    public function getParameter(string $name): ?string
+    /**
+     * @param string $name
+     * @return Parameter|null
+     */
+    public function ofName(string $name): ?Parameter
     {
-        return $this->parameters[$name] ?? null;
+        $filteredArray = array_filter($this->parameters, function ($parameter) use ($name) {
+            return $parameter->getName() === $name;
+        });
+
+        return array_shift($filteredArray);
     }
 
+    /**
+     * @return int
+     */
     public function count(): int
     {
         return count($this->parameters);
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return array_map(function (Parameter $parameter) {
+            return [
+                'name' => $parameter->getName(),
+                'value' => $parameter->getValue(),
+            ];
+        }, $this->parameters);
     }
 }
