@@ -7,19 +7,13 @@ use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 
 class FootballApiException extends Exception
 {
-    private string $url;
-    private array $body;
-    private int $statusCode;
-    private Headers $headers;
-
-    public function __construct(string $url, array $body, int $statusCode, Headers $headers)
-    {
-        $this->url = $url;
-        $this->body = $body;
-        $this->statusCode = $statusCode;
-        $this->headers = $headers;
-
-        parent::__construct(sprintf('There was an error calling %s', $url), 0);
+    public function __construct(
+        private string $url,
+        private array $body,
+        private int $statusCode,
+        private Headers $headers
+    ) {
+        parent::__construct(sprintf('There was an error calling %s', $url));
     }
 
     /**
@@ -47,7 +41,7 @@ class FootballApiException extends Exception
     }
 
     /**
-     * @return array
+     * @return Headers
      */
     public function getHeaders(): Headers
     {
