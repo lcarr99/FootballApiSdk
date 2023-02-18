@@ -60,12 +60,10 @@ class CountryCollection implements Countable, ArrayAccess, JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        return array_map(function (Country $country) {
-            return [
-                'name' => $country->getName(),
-                'code' => $country->getCode(),
-                'flag_url' => $country->getFlagUrl(),
-            ];
-        }, $this->countries);
+        return array_map(fn(Country $country) => [
+            'name' => $country->getName(),
+            'code' => $country->getCode(),
+            'flag_url' => $country->getFlagUrl(),
+        ], $this->countries);
     }
 }

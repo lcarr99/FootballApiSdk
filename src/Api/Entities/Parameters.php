@@ -45,11 +45,9 @@ class Parameters implements Countable, JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return array_map(function (Parameter $parameter) {
-            return [
+        return array_map(fn (Parameter $parameter) => [
                 'name' => $parameter->getName(),
                 'value' => $parameter->getValue(),
-            ];
-        }, $this->parameters);
+            ], $this->parameters);
     }
 }
