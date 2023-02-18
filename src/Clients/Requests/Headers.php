@@ -10,15 +10,6 @@ class Headers implements ArrayAccess
     {}
 
     /**
-     * @param string $headerName
-     * @return mixed
-     */
-    public function getHeader(string $headerName): mixed
-    {
-        return $this->headers[$headerName] ?? null;
-    }
-
-    /**
      * @return array
      */
     public function getHeaders(): array
