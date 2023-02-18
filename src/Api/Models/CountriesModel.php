@@ -43,9 +43,9 @@ class CountriesModel implements JsonSerializable
             $countryResponseData['errors']
         );
         $this->resultCount = new ResultsCount($countryResponseData['results']);
-        $this->countries = new CountryCollection(array_map(function ($countryData) {
-            return new Country($countryData);
-        }, $countryResponseData['response']));
+        $this->countries = new CountryCollection(
+            array_map(fn($countryData) => new Country($countryData), $countryResponseData['response'])
+        );
     }
 
     /**
