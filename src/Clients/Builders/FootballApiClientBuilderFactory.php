@@ -14,14 +14,12 @@ class FootballApiClientBuilderFactory
      */
     public static function createFootballApiClientBuilder(FootballApiConfig $footballApiConfig): FootballApiClientBuilder
     {
-        if ($footballApiConfig['api-client'] === ApiClients::RAPID_API) {
-            return new RapidApiClientBuilder();
-        }
-
-        if ($footballApiConfig['api-client'] === ApiClients::API_SPORTS) {
-            return new ApiSportsClientBuilder();
-        }
-
-        throw new InvalidArgumentException('The client name should be set to either rapid-api or api-sports');
+        return match ($footballApiConfig['api-client']) {
+            ApiClients::RAPID_API => new RapidApiClientBuilder(),
+            ApiClients::API_SPORTS => new ApiSportsClientBuilder(),
+            default => throw new InvalidArgumentException(
+                'The client name should be set to either rapid-api or api-sports'
+            ),
+        };
     }
 }

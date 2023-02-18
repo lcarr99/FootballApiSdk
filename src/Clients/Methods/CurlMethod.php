@@ -6,11 +6,16 @@ use Lcarr\FootballApiSdk\Api\Exceptions\FootballApiException;
 use Lcarr\FootballApiSdk\Clients\FootballCurl;
 use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 use Lcarr\FootballApiSdk\Clients\Requests\Request;
+use Lcarr\FootballApiSdk\FootballApiSdkException;
 
 class CurlMethod implements ClientMethod
 {
     public function __construct(private FootballCurl|null $footballCurl = null)
     {
+        extension_loaded('curl') ?? throw new FootballApiSdkException(
+            'Please make sure you have the curl extension loaded in your php.ini'
+        );
+
         $this->footballCurl = $this->footballCurl ?? new FootballCurl();
     }
 
