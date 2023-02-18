@@ -25,9 +25,7 @@ class Parameters implements Countable, JsonSerializable
      */
     public function ofName(string $name): ?Parameter
     {
-        $filteredArray = array_filter($this->parameters, function ($parameter) use ($name) {
-            return $parameter->getName() === $name;
-        });
+        $filteredArray = array_filter($this->parameters, fn ($parameter) => $parameter->getName() === $name);
 
         return array_shift($filteredArray);
     }
