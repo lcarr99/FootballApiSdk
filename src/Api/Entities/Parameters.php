@@ -29,6 +29,9 @@ class Parameters implements Countable, JsonSerializable
         return array_shift($filteredArray);
     }
 
+    /**
+     * @return Parameter[]
+     */
     public function all(): array
     {
         return $this->parameters;
