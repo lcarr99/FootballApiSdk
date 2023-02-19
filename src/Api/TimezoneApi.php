@@ -15,19 +15,26 @@ use Lcarr\FootballApiSdk\Api\Models\Model;
 use Lcarr\FootballApiSdk\Api\Models\TimezoneModel;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 
-class TimezoneApi implements BuildsModelFromResponseArray
+class TimezoneApi
 {
     private const URL = 'timezone';
 
     public function __construct(private FootballApiClient $footballApiClient)
     {}
 
+    /**
+     * @return TimezoneModel
+     */
     public function all(): TimezoneModel
     {
         return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', self::URL));
     }
 
-    public function buildModelFromResponseArray(array $responseArray): Model
+    /**
+     * @param array $responseArray
+     * @return TimezoneModel
+     */
+    private function buildModelFromResponseArray(array $responseArray): TimezoneModel
     {
         $builder = ModelBuilderFactory::createModelBuilder($responseArray['get']);
         $collectionName = new CollectionName($responseArray['get']);
