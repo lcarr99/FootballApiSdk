@@ -2,6 +2,15 @@
 
 namespace Lcarr\FootballApiSdk\Api;
 
+use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
+use Lcarr\FootballApiSdk\Api\Entities\Collections\CountryCollection;
+use Lcarr\FootballApiSdk\Api\Entities\Countries\Country;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
+use Lcarr\FootballApiSdk\Api\Entities\Parameters;
+use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
+use Lcarr\FootballApiSdk\Api\Models\Builders\ModelBuilderFactory;
+use Lcarr\FootballApiSdk\Api\Models\Builders\ModelCreator;
 use Lcarr\FootballApiSdk\Api\Models\CountriesModel;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 
@@ -19,8 +28,8 @@ class CountriesApi
     public function ofName(string $name): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['name' => $name]);
-        $response = $this->footballApiClient->send('GET', $url);
-        return new CountriesModel($response);
+
+        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', $url));
     }
 
     /**
@@ -30,9 +39,8 @@ class CountriesApi
     public function ofCode(string $code): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['code' => $code]);
-        $response = $this->footballApiClient->send('GET', $url);
 
-        return new CountriesModel($response);
+        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', $url));
     }
 
     /**
@@ -42,9 +50,7 @@ class CountriesApi
     public function search(string $searchTerm): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['search' => $searchTerm]);
-        $response = $this->footballApiClient->send('GET', $url);
-
-        return new CountriesModel($response);
+        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', $url));
     }
 
     /**
@@ -52,8 +58,27 @@ class CountriesApi
      */
     public function all(): CountriesModel
     {
-        $response = $this->footballApiClient->send('GET', self::COUNTRIES_URL);
+        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', self::COUNTRIES_URL));
+    }
 
-        return new CountriesModel($response);
+    /**
+     * @param array $responseArray
+     * @return CountriesModel
+     */
+    private function buildModelFromResponseArray(array $responseArray): CountriesModel
+    {
+        $builder = ModelBuilderFactory::createModelBuilder($responseArray['get']);
+        $collectionName = new CollectionName($responseArray['get']);
+        $parameters = new Parameters($responseArray['parameters']);
+        $errors = empty($responseArray['errors']) ? new EmptyFootballApiError() : new FootballApiError(
+            $responseArray['errors']
+        );
+        $resultCount = new ResultsCount($responseArray['results']);
+        $countries = new CountryCollection(
+            array_map(fn($countryData) => new Country($countryData), $responseArray['response'])
+        );
+
+        $modelCreator = new ModelCreator($builder);
+        return $modelCreator->createModel($collectionName, $parameters, $errors, $resultCount, $countries);
     }
 }

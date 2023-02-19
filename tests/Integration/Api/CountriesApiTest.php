@@ -78,7 +78,7 @@ class CountriesApiTest extends TestCase
         $this->assertEquals(0, $countriesResponse->getParameters()->count());
         $this->assertInstanceOf(FootballApiError::class, $countriesResponse->getErrors());
         $this->assertEquals(0, $countriesResponse->getResultCount()->count());
-        $this->assertEmpty($countriesResponse->getCountries());
+        $this->assertEquals(0, $countriesResponse->getCountries()->count());
     }
 
     public function sampleSuccessfulResponseWithError(): array

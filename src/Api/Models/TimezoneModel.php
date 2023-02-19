@@ -2,21 +2,20 @@
 
 namespace Lcarr\FootballApiSdk\Api\Models;
 
-use JsonSerializable;
-use Lcarr\FootballApiSdk\Api\Entities\Collections\CountryCollection;
 use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
+use Lcarr\FootballApiSdk\Api\Entities\Collections\TimezoneCollection;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiErrorInterface;
 use Lcarr\FootballApiSdk\Api\Entities\Parameters;
 use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
 
-class CountriesModel implements JsonSerializable, Model
+class TimezoneModel implements Model
 {
     public function __construct(
         private CollectionName $collectionName,
         private Parameters $parameters,
         private FootballApiErrorInterface $errors,
         private ResultsCount $resultCount,
-        private CountryCollection $countries
+        private TimezoneCollection $timezoneCollection
     )
     {}
 
@@ -53,24 +52,15 @@ class CountriesModel implements JsonSerializable, Model
     }
 
     /**
-     * @return CountryCollection
+     * @return TimezoneCollection
      */
-    public function getCountries(): CountryCollection
+    public function getTimezoneCollection(): TimezoneCollection
     {
-        return $this->countries;
+        return $this->timezoneCollection;
     }
 
-    /**
-     * @return mixed
-     */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
-        return [
-            'collection' => $this->collectionName->getCollectionName(),
-            'parameter' => $this->getParameters(),
-            'errors' => $this->getErrors(),
-            'resultCount' => $this->resultCount->count(),
-            'countries' => $this->countries,
-        ];
+
     }
 }
