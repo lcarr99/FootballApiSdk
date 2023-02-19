@@ -12,9 +12,10 @@ use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
 use Lcarr\FootballApiSdk\Api\Models\Builders\ModelBuilderFactory;
 use Lcarr\FootballApiSdk\Api\Models\Builders\ModelCreator;
 use Lcarr\FootballApiSdk\Api\Models\CountriesModel;
+use Lcarr\FootballApiSdk\Api\Models\Model;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 
-class CountriesApi
+class CountriesApi implements BuildsModelFromResponseArray
 {
     private const COUNTRIES_URL = 'countries';
 
@@ -63,9 +64,9 @@ class CountriesApi
 
     /**
      * @param array $responseArray
-     * @return CountriesModel
+     * @return Model
      */
-    private function buildModelFromResponseArray(array $responseArray): CountriesModel
+    public function buildModelFromResponseArray(array $responseArray): Model
     {
         $builder = ModelBuilderFactory::createModelBuilder($responseArray['get']);
         $collectionName = new CollectionName($responseArray['get']);
