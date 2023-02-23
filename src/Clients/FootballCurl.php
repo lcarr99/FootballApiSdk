@@ -3,6 +3,8 @@
 namespace Lcarr\FootballApiSdk\Clients;
 
 use CurlHandle;
+use Lcarr\FootballApiSdk\Clients\Requests\Header;
+use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 
 class FootballCurl
 {
@@ -25,11 +27,18 @@ class FootballCurl
     }
 
     /**
-     * @return array
+     * @return Response
      */
-    public function getResponse(): array
+    public function getResponse(): Response
     {
-        return json_decode(curl_exec($this->curl), true);
+        $responseString = curl_exec($this->curl);
+
+        return new Response(
+            $this->getOption(CURLINFO_EFFECTIVE_URL),
+            $this->getOption(CURLINFO_HTTP_CODE),
+            json_decode(substr($responseString, $this->getOption(CURLINFO_HEADER_SIZE)), true),
+            $this->parseHeaders($responseString)
+        );
     }
 
     /**
@@ -55,6 +64,31 @@ class FootballCurl
     public function getInfo(): array
     {
         return curl_getinfo($this->curl);
+    }
+
+    /**
+     * @param string $responseString
+     * @return Headers
+     */
+    private function parseHeaders(string $responseString): Headers
+    {
+        $headerSize = $this->getOption(CURLINFO_HEADER_SIZE);
+        $headersArray = array_filter(explode("\n", substr($responseString, 0, $headerSize)));
+        $headers = new Headers();
+
+        foreach ($headersArray as $header) {
+            if (!strpos($header, ': ')) {
+                continue;
+            }
+
+            $explodedHeader = explode(': ', trim($header));
+
+            list($name, $value) = $explodedHeader;
+
+            $headers->add(new Header($name, $value));
+        }
+
+        return $headers;
     }
 
     /**

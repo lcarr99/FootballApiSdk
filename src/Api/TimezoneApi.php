@@ -2,6 +2,7 @@
 
 namespace Lcarr\FootballApiSdk\Api;
 
+use Lcarr\FootballApiSdk\Clients\Response;
 use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
 use Lcarr\FootballApiSdk\Api\Entities\Collections\TimezoneCollection;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
@@ -31,11 +32,13 @@ class TimezoneApi
     }
 
     /**
-     * @param array $responseArray
+     * @param Response $response
      * @return TimezoneModel
      */
-    private function buildModelFromResponseArray(array $responseArray): TimezoneModel
+    private function buildModelFromResponseArray(Response $response): TimezoneModel
     {
+        $responseArray = $response->getBody();
+//        var_dump($response);
         $builder = ModelBuilderFactory::createModelBuilder($responseArray['get']);
         $collectionName = new CollectionName($responseArray['get']);
         $parameters = new Parameters($responseArray['parameters']);

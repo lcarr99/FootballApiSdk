@@ -25,7 +25,7 @@ class FootballApiClient implements FootballApiClientInterface
      * @param string $url
      * @return array
      */
-    public function send(string $method, string $url): array
+    public function send(string $method, string $url): Response
     {
         return $this->client->send($method, $url);
     }

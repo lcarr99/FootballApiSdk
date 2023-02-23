@@ -22,7 +22,7 @@ class RapidApiClient implements FootballApiClientInterface
      * @param string $url
      * @return array
      */
-    public function send(string $method, string $url): array
+    public function send(string $method, string $url): Response
     {
         return $this->clientMethod->send(RequestFactory::createRequest($method, self::BASE_URL . $url, $this->headers));
     }

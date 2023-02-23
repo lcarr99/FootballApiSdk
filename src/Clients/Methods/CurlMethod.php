@@ -4,8 +4,10 @@ namespace Lcarr\FootballApiSdk\Clients\Methods;
 
 use Lcarr\FootballApiSdk\Api\Exceptions\FootballApiException;
 use Lcarr\FootballApiSdk\Clients\FootballCurl;
+use Lcarr\FootballApiSdk\Clients\Requests\Header;
 use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 use Lcarr\FootballApiSdk\Clients\Requests\Request;
+use Lcarr\FootballApiSdk\Clients\Response;
 use Lcarr\FootballApiSdk\FootballApiSdkException;
 
 class CurlMethod implements ClientMethod
@@ -24,7 +26,7 @@ class CurlMethod implements ClientMethod
         $this->footballCurl->close();
     }
 
-    public function send(Request $request): array
+    public function send(Request $request): Response
     {
         $headers = $request->getHeaders();
 
@@ -33,18 +35,19 @@ class CurlMethod implements ClientMethod
             CURLOPT_URL => $request->getUrl(),
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => true,
         ];
 
         $this->footballCurl->setOptions($curlOptions);
 
         $response = $this->footballCurl->getResponse();
 
-        if ($this->footballCurl->hasError()) {
+        if ($this->footballCurl->hasError() || $response->getStatusCode() >= 400) {
             throw new FootballApiException(
-                $request->getUrl(),
-                $this->footballCurl->getResponse(),
-                $this->footballCurl->getOption(CURLINFO_RESPONSE_CODE),
-                $headers
+                $response->getUrl(),
+                $response->getBody(),
+                $response->getStatusCode(),
+                $response->getHeaders()
             );
         }
 
@@ -53,12 +56,7 @@ class CurlMethod implements ClientMethod
 
     private function formatHeaders(Headers $headers): array
     {
-        $formattedHeaders = [];
-
-        foreach ($headers as $header => $value) {
-            $formattedHeaders[] = $header . ': ' . $value;
-        }
-
-        return $formattedHeaders;
+        var_dump($headers);
+        return array_map(fn(Header $header) => $header->getName() . ': ' . $header->getValue(), $headers->toArray());
     }
 }

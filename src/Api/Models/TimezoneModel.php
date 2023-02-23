@@ -10,6 +10,13 @@ use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
 
 class TimezoneModel implements Model
 {
+    /**
+     * @param CollectionName $collectionName
+     * @param Parameters $parameters
+     * @param FootballApiErrorInterface $errors
+     * @param ResultsCount $resultCount
+     * @param TimezoneCollection $timezoneCollection
+     */
     public function __construct(
         private CollectionName $collectionName,
         private Parameters $parameters,
@@ -59,8 +66,11 @@ class TimezoneModel implements Model
         return $this->timezoneCollection;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed
     {
-
+        return [];
     }
 }

@@ -6,6 +6,7 @@ use Lcarr\FootballApiSdk\Clients\FootballApiClientInterface;
 use Lcarr\FootballApiSdk\Clients\FootballApiConfig;
 use Lcarr\FootballApiSdk\Clients\Methods\ClientMethod;
 use Lcarr\FootballApiSdk\Clients\RapidApiClient;
+use Lcarr\FootballApiSdk\Clients\Requests\Header;
 use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 use Lcarr\FootballApiSdk\FootballApiSdkException;
 
@@ -40,10 +41,10 @@ class RapidApiClientBuilder implements FootballApiClientBuilder
         $config['rapid-api-key'] ?? throw new FootballApiSdkException(
             'Please make sure the rapid-api-key is set in the config.'
         );
-        $this->headers = new Headers([
-            'X-RapidAPI-Key' => $config['rapid-api-key'],
-            'X-RapidAPI-Host' => $config['rapid-api-host'],
-        ]);
+
+        $this->headers = new Headers();
+        $this->headers->add(new Header('X-RapidAPI-Key', $config['rapid-api-key']));
+        $this->headers->add(new Header('X-RapidAPI-Host', $config['rapid-api-host']));
     }
 
     /**

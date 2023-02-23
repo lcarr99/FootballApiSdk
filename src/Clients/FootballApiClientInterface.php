@@ -4,5 +4,5 @@ namespace Lcarr\FootballApiSdk\Clients;
 
 interface FootballApiClientInterface
 {
-    public function send(string $method, string $url): array;
+    public function send(string $method, string $url): Response;
 }
