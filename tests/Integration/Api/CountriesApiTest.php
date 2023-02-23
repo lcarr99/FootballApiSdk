@@ -4,6 +4,8 @@ use Lcarr\FootballApiSdk\Api\CountriesApi;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
+use Lcarr\FootballApiSdk\Clients\Requests\Headers;
+use Lcarr\FootballApiSdk\Clients\Response;
 use PHPUnit\Framework\TestCase;
 
 class CountriesApiTest extends TestCase
@@ -69,7 +71,7 @@ class CountriesApiTest extends TestCase
     /**
      * @dataProvider sampleSuccessfulResponseWithError
      */
-    public function testResponseModelWhenSuccessfulResponseWithErrorIsReturned($response)
+    public function testResponseModelWhenSuccessfulResponseWithErrorIsReturned(Response $response)
     {
         $this->footballApiClient->method('send')->willReturn($response);
         $countriesResponse = $this->countriesApi->all();
@@ -85,7 +87,7 @@ class CountriesApiTest extends TestCase
     {
         return [
             'sampleSuccessResponseWithError' => [
-                [
+                new Response('https://test.com', 204, [
                     'get' => 'countries',
                     'parameters' => [],
                     'errors' => [
@@ -99,7 +101,7 @@ class CountriesApiTest extends TestCase
                         'total' => 1
                     ],
                     'response' => [],
-                ],
+                ], new Headers())
             ],
         ];
     }

@@ -38,7 +38,6 @@ class TimezoneApi
     private function buildModelFromResponseArray(Response $response): TimezoneModel
     {
         $responseArray = $response->getBody();
-//        var_dump($response);
         $builder = ModelBuilderFactory::createModelBuilder($responseArray['get']);
         $collectionName = new CollectionName($responseArray['get']);
         $parameters = new Parameters($responseArray['parameters']);

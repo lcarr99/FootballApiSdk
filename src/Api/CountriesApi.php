@@ -12,8 +12,8 @@ use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
 use Lcarr\FootballApiSdk\Api\Models\Builders\ModelBuilderFactory;
 use Lcarr\FootballApiSdk\Api\Models\Builders\ModelCreator;
 use Lcarr\FootballApiSdk\Api\Models\CountriesModel;
-use Lcarr\FootballApiSdk\Api\Models\Model;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
+use Lcarr\FootballApiSdk\Clients\Response;
 
 class CountriesApi
 {
@@ -30,7 +30,7 @@ class CountriesApi
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['name' => $name]);
 
-        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', $url));
+        return $this->buildModelFromResponse($this->footballApiClient->send('GET', $url));
     }
 
     /**
@@ -41,7 +41,7 @@ class CountriesApi
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['code' => $code]);
 
-        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', $url));
+        return $this->buildModelFromResponse($this->footballApiClient->send('GET', $url));
     }
 
     /**
@@ -51,7 +51,7 @@ class CountriesApi
     public function search(string $searchTerm): CountriesModel
     {
         $url = self::COUNTRIES_URL . '?' . http_build_query(['search' => $searchTerm]);
-        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', $url));
+        return $this->buildModelFromResponse($this->footballApiClient->send('GET', $url));
     }
 
     /**
@@ -59,15 +59,16 @@ class CountriesApi
      */
     public function all(): CountriesModel
     {
-        return $this->buildModelFromResponseArray($this->footballApiClient->send('GET', self::COUNTRIES_URL));
+        return $this->buildModelFromResponse($this->footballApiClient->send('GET', self::COUNTRIES_URL));
     }
 
     /**
      * @param array $responseArray
      * @return CountriesModel
      */
-    private function buildModelFromResponseArray(array $responseArray): CountriesModel
+    private function buildModelFromResponse(Response $response): CountriesModel
     {
+        $responseArray = $response->getBody();
         $builder = ModelBuilderFactory::createModelBuilder($responseArray['get']);
         $collectionName = new CollectionName($responseArray['get']);
         $parameters = new Parameters($responseArray['parameters']);
