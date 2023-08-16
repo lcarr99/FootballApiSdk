@@ -3,13 +3,18 @@
 namespace Lcarr\FootballApiSdk\Api\Models;
 
 use JsonSerializable;
+use Lcarr\FootballApiSdk\Api\CreatableFromResponse;
 use Lcarr\FootballApiSdk\Api\Entities\Collections\CountryCollection;
 use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
+use Lcarr\FootballApiSDK\Api\Entities\Countries\Country;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiErrorInterface;
 use Lcarr\FootballApiSdk\Api\Entities\Parameters;
 use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
+use Lcarr\FootballApiSdk\Clients\Response;
 
-class CountriesModel implements JsonSerializable, Model
+class CountriesModel implements JsonSerializable, ModelInterface, CreatableFromResponse
 {
     public function __construct(
         private CollectionName $collectionName,
@@ -19,6 +24,26 @@ class CountriesModel implements JsonSerializable, Model
         private CountryCollection $countries
     )
     {}
+
+    /**
+     * @param Response $response
+     * @return CountriesModel
+     */
+    public static function createFromResponse(Response $response): CountriesModel
+    {
+        $responseArray = $response->getBody();
+        $collectionName = new CollectionName($responseArray['get']);
+        $parameters = new Parameters($responseArray['parameters']);
+        $errors = empty($responseArray['errors']) ? new EmptyFootballApiError() : new FootballApiError(
+            $responseArray['errors']
+        );
+        $resultCount = new ResultsCount($responseArray['results']);
+        $countries = new CountryCollection(
+            array_map(fn(array $countryData) => new Country($countryData), $responseArray['response'])
+        );
+
+        return new self($collectionName, $parameters, $errors, $resultCount, $countries);
+    }
 
     /**
      * @return CollectionName

@@ -2,15 +2,15 @@
 
 namespace Lcarr\FootballApiSdk\Api;
 
-use Lcarr\FootballApiSdk\Api\Models\TimezoneModel;
+use Lcarr\FootballApiSdk\Api\Models\LeaguesModel;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 
-class TimezoneApi
+class LeaguesApi
 {
     /**
      * @var string
      */
-    private readonly string $url = 'timezone';
+    private readonly string $url = 'leagues';
 
     /**
      * @param FootballApiClient $footballApiClient
@@ -19,17 +19,19 @@ class TimezoneApi
     {}
 
     /**
-     * @return TimezoneModel
+     * @param int $id
+     * @return LeaguesModel
      */
-    public function all(): TimezoneModel
+    public function ofId(int $id): LeaguesModel
     {
-        return TimezoneModel::createFromResponse($this->footballApiClient->send('GET', $this->url));
+        $response = $this->footballApiClient->send('get', $this->url);
+        return LeaguesModel::createFromResponse($response);
     }
 
     /**
      * @return string
      */
-    public function getUrl(): string
+    final public function getUrl(): string
     {
         return $this->url;
     }

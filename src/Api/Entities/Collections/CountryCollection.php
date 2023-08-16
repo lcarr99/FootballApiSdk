@@ -4,7 +4,7 @@ namespace Lcarr\FootballApiSdk\Api\Entities\Collections;
 
 use Lcarr\FootballApiSDK\Api\Entities\Countries\Country;
 
-class CountryCollection extends Collection
+final class CountryCollection extends Collection
 {
     /**
      * @return mixed

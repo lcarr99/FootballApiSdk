@@ -2,13 +2,18 @@
 
 namespace Lcarr\FootballApiSdk\Api\Models;
 
+use Lcarr\FootballApiSdk\Api\CreatableFromResponse;
 use Lcarr\FootballApiSdk\Api\Entities\CollectionName;
 use Lcarr\FootballApiSdk\Api\Entities\Collections\TimezoneCollection;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
+use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiErrorInterface;
 use Lcarr\FootballApiSdk\Api\Entities\Parameters;
 use Lcarr\FootballApiSdk\Api\Entities\ResultsCount;
+use Lcarr\FootballApiSdk\Api\Entities\Timezones\Timezone;
+use Lcarr\FootballApiSdk\Clients\Response;
 
-class TimezoneModel implements Model
+class TimezoneModel implements ModelInterface, CreatableFromResponse
 {
     /**
      * @param CollectionName $collectionName
@@ -25,6 +30,26 @@ class TimezoneModel implements Model
         private TimezoneCollection $timezoneCollection
     )
     {}
+
+    /**
+     * @param Response $response
+     * @return TimezoneModel
+     */
+    public static function createFromResponse(Response $response): TimezoneModel
+    {
+        $responseArray = $response->getBody();
+        $collectionName = new CollectionName($responseArray['get']);
+        $parameters = new Parameters($responseArray['parameters']);
+        $errors = empty($responseArray['errors']) ? new EmptyFootballApiError() : new FootballApiError(
+            $responseArray['errors']
+        );
+        $resultCount = new ResultsCount($responseArray['results']);
+        $timezones = new TimezoneCollection(
+            array_map(fn (string $timezone) => new Timezone($timezone), $responseArray['response'])
+        );
+
+        return new self($collectionName, $parameters, $errors, $resultCount, $timezones);
+    }
 
     /**
      * @return CollectionName

@@ -4,9 +4,6 @@ namespace Lcarr\FootballApiSdk\Api\Entities\Collections;
 
 abstract class Collection
 {
-    public function __construct(protected array $collectionData)
-    {}
-
     /**
      * @return int
      */

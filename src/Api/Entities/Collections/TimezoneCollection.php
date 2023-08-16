@@ -4,7 +4,7 @@ namespace Lcarr\FootballApiSdk\Api\Entities\Collections;
 
 use Lcarr\FootballApiSdk\Api\Entities\Timezones\Timezone;
 
-class TimezoneCollection extends Collection
+final class TimezoneCollection extends Collection
 {
     public function jsonSerialize(): mixed
     {
