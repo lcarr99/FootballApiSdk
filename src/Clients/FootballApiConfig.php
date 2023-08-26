@@ -3,7 +3,7 @@
 namespace Lcarr\FootballApiSdk\Clients;
 
 use ArrayAccess;
-use Lcarr\FootballApiSdk\FootballApiSdkException;
+use Lcarr\FootballApiSdk\Clients\Exceptions\FootballApiSdkException;
 
 class FootballApiConfig implements ArrayAccess
 {

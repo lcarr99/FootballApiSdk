@@ -1,217 +1,204 @@
 <?php
 
-use Lcarr\FootballApiSdk\Api\CountriesApi;
-use Lcarr\FootballApiSdk\Api\Entities\Errors\EmptyFootballApiError;
-use Lcarr\FootballApiSdk\Api\Entities\Errors\FootballApiError;
 use Lcarr\FootballApiSdk\Clients\FootballApiClient;
 use Lcarr\FootballApiSdk\Clients\Requests\Headers;
 use Lcarr\FootballApiSdk\Clients\Response;
-use PHPUnit\Framework\TestCase;
+use Lcarr\FootballApiSdk\Countries\Api\CountriesApi;
+use Lcarr\FootballApiSdk\Errors\EmptyFootballApiError;
+use Lcarr\FootballApiSdk\Errors\FootballApiError;
 
-class CountriesApiTest extends TestCase
-{
-    private FootballApiClient $footballApiClient;
-    private CountriesApi $countriesApi;
+beforeEach(function () {
+    $this->footballApiClient = $this->createStub(FootballApiClient::class);
+    $this->countriesApi = new CountriesApi($this->footballApiClient);
+});
 
-    protected function setUp(): void
-    {
-        $this->footballApiClient = $this->createStub(FootballApiClient::class);
-        $this->countriesApi = new CountriesApi($this->footballApiClient);
-    }
+test('response model from of name is correct', function (string $countryName, array $response) {
+    $this->footballApiClient->method('send')->willReturn(
+        new Response(
+            'countries',
+            200,
+            $response,
+            new Headers([])
+        )
+    );
+    $countriesResponse = $this->countriesApi->ofName($countryName);
 
-    /**
-     * @param string $countryName
-     * @param array $response
-     * @dataProvider sampleCountryApiOfNameResponseArrays
-     */
-    public function testResponseModelFromOfNameIsCorrect(string $countryName, array $response)
-    {
-        $this->footballApiClient->method('send')->willReturn($response);
-        $countriesResponse = $this->countriesApi->ofName($countryName);
+    expect($countriesResponse->getCountries()->count())->toEqual(1);
+    expect($countriesResponse->getResultCount()->count())->toBe(1);
+    expect($countriesResponse->getErrors())->toBeInstanceOf(EmptyFootballApiError::class);
+    expect($countriesResponse->getCollectionName()->getCollectionName())->toBe('countries');
+})->with('sampleCountryApiOfNameResponseArrays');
 
-        $this->assertEquals(1, $countriesResponse->getCountries()->count());
-        $this->assertSame(1, $countriesResponse->getResultCount()->count());
-        $this->assertInstanceOf(EmptyFootballApiError::class, $countriesResponse->getErrors());
-        $this->assertSame('countries', $countriesResponse->getCollectionName()->getCollectionName());
-    }
+test('response model from of code', function (string $code, array $response) {
+    $this->footballApiClient->method('send')->willReturn(new Response(
+        'countries',
+        200,
+        $response,
+        new Headers([])));
+    $countriesResponse = $this->countriesApi->ofCode($code);
 
-    /**
-     * @param string $code
-     * @param array $response
-     * @dataProvider sampleCountryApiOfCodeResponseArrays
-     */
-    public function testResponseModelFromOfCode(string $code, array $response)
-    {
-        $this->footballApiClient->method('send')->willReturn($response);
-        $countriesResponse = $this->countriesApi->ofCode($code);
+    expect($countriesResponse->getParameters()->count())->toBe(1);
+    expect($countriesResponse->getCountries()->count())->toBe(1);
+    expect($countriesResponse->getResultCount()->count())->toBe(1);
+    expect($countriesResponse->getErrors())->toBeInstanceOf(EmptyFootballApiError::class);
+    expect($countriesResponse->getCollectionName()->getCollectionName())->toBe('countries');
+})->with('sampleCountryApiOfCodeResponseArrays');
 
-        $this->assertSame(1, $countriesResponse->getParameters()->count());
-        $this->assertSame(1, $countriesResponse->getCountries()->count());
-        $this->assertSame(1, $countriesResponse->getResultCount()->count());
-        $this->assertInstanceOf(EmptyFootballApiError::class, $countriesResponse->getErrors());
-        $this->assertSame('countries', $countriesResponse->getCollectionName()->getCollectionName());
-    }
+test('response model from all', function (array $response) {
+    $this->footballApiClient->method('send')->willReturn(new Response(
+        'countries',
+        200,
+        $response,
+        new Headers([])));
+    $countriesResponse = $this->countriesApi->all();
 
-    /**
-     * @param array $response
-     * @dataProvider sampleCountryApiAllResponse
-     */
-    public function testResponseModelFromAll(array $response)
-    {
-        $this->footballApiClient->method('send')->willReturn($response);
-        $countriesResponse = $this->countriesApi->all();
+    expect($countriesResponse->getParameters()->count())->toBe(0);
+    expect($countriesResponse->getCountries()->count())->toBe(165);
+    expect($countriesResponse->getResultCount()->count())->toBe(165);
+    expect($countriesResponse->getErrors())->toBeInstanceOf(EmptyFootballApiError::class);
+    expect($countriesResponse->getCollectionName()->getCollectionName())->toBe('countries');
+})->with('sampleCountryApiAllResponse');
 
-        $this->assertSame(0, $countriesResponse->getParameters()->count());
-        $this->assertSame(165, $countriesResponse->getCountries()->count());
-        $this->assertSame(165, $countriesResponse->getResultCount()->count());
-        $this->assertInstanceOf(EmptyFootballApiError::class, $countriesResponse->getErrors());
-        $this->assertSame('countries', $countriesResponse->getCollectionName()->getCollectionName());
-    }
+test('response model when successful response with error is returned', function (array $response) {
+    $this->footballApiClient->method('send')->willReturn(new Response(
+        'countries',
+        200,
+        $response,
+        new Headers([])));
 
-    /**
-     * @dataProvider sampleSuccessfulResponseWithError
-     */
-    public function testResponseModelWhenSuccessfulResponseWithErrorIsReturned(Response $response)
-    {
-        $this->footballApiClient->method('send')->willReturn($response);
-        $countriesResponse = $this->countriesApi->all();
+    $countriesResponse = $this->countriesApi->all();
 
-        $this->assertEquals('countries', $countriesResponse->getCollectionName()->getCollectionName());
-        $this->assertEquals(0, $countriesResponse->getParameters()->count());
-        $this->assertInstanceOf(FootballApiError::class, $countriesResponse->getErrors());
-        $this->assertEquals(0, $countriesResponse->getResultCount()->count());
-        $this->assertEquals(0, $countriesResponse->getCountries()->count());
-    }
+    expect($countriesResponse->getCollectionName()->getCollectionName())->toEqual('countries');
+    expect($countriesResponse->getParameters()->count())->toEqual(0);
+    expect($countriesResponse->getErrors())->toBeInstanceOf(FootballApiError::class);
+    expect($countriesResponse->getResultCount()->count())->toEqual(0);
+    expect($countriesResponse->getCountries()->count())->toEqual(0);
+})->with('sampleSuccessfulResponseWithError');
 
-    public function sampleSuccessfulResponseWithError(): array
-    {
-        return [
-            'sampleSuccessResponseWithError' => [
-                new Response('https://test.com', 204, [
-                    'get' => 'countries',
-                    'parameters' => [],
-                    'errors' => [
-                        'time' => '2019-11-26T00:00:00+00:00',
-                        'bug' => 'This is on our side, please report us this bug on https://dashboard.api-football.com',
-                        'report' => 'countries'
-                    ],
-                    'results' => 0,
-                    'paging' => [
-                        'current' => 1,
-                        'total' => 1
-                    ],
-                    'response' => [],
-                ], new Headers())
+dataset('sampleSuccessfulResponseWithError', function () {
+    return [
+        'sampleSuccessResponseWithError' => [
+            [
+                'get' => 'countries',
+                'parameters' => [],
+                'errors' => [
+                    'time' => '2019-11-26T00:00:00+00:00',
+                    'bug' => 'This is on our side, please report us this bug on https://dashboard.api-football.com',
+                    'report' => 'countries'
+                ],
+                'results' => 0,
+                'paging' => [
+                    'current' => 1,
+                    'total' => 1
+                ],
+                'response' => [],
             ],
-        ];
-    }
+        ],
+    ];
+});
 
-    public function sampleCountryApiOfNameResponseArrays(): array
-    {
-        return [
-            'searchTermEngland' => [
-                'england',
-                [
-                    'get' => 'countries',
-                    'parameters' => [
-                        'name' => 'england',
-                    ],
-                    'errors' => [],
-                    'results' => 1,
-                    'paging' => [
-                        'current' => 1,
-                        'total' => 1,
-                    ],
-                    'response' => [
-                        [
-                            'name' => 'England',
-                            'code' => 'GB',
-                            'flag' => 'https://media.api-sports.io/flags/gb.svg',
-                        ],
+dataset('sampleCountryApiOfNameResponseArrays', function () {
+    return [
+        'searchTermEngland' => [
+            'england',
+            [
+                'get' => 'countries',
+                'parameters' => [
+                    'name' => 'england',
+                ],
+                'errors' => [],
+                'results' => 1,
+                'paging' => [
+                    'current' => 1,
+                    'total' => 1,
+                ],
+                'response' => [
+                    [
+                        'name' => 'England',
+                        'code' => 'GB',
+                        'flag' => 'https://media.api-sports.io/flags/gb.svg',
                     ],
                 ],
             ],
-            'searchTermFrance' => [
-                'france',
-                [
-                    'get' => 'countries',
-                    'parameters' => [
-                        'name' => 'france',
-                    ],
-                    'errors' => [],
-                    'results' => 1,
-                    'paging' => [
-                        'current' => 1,
-                        'total' => 1,
-                    ],
-                    'response' => [
-                        [
-                            'name' => 'France',
-                            'code' => 'FR',
-                            'flag' => 'https://media.api-sports.io/flags/fr.svg',
-                        ],
+        ],
+        'searchTermFrance' => [
+            'france',
+            [
+                'get' => 'countries',
+                'parameters' => [
+                    'name' => 'france',
+                ],
+                'errors' => [],
+                'results' => 1,
+                'paging' => [
+                    'current' => 1,
+                    'total' => 1,
+                ],
+                'response' => [
+                    [
+                        'name' => 'France',
+                        'code' => 'FR',
+                        'flag' => 'https://media.api-sports.io/flags/fr.svg',
                     ],
                 ],
             ],
-        ];
-    }
+        ],
+    ];
+});
+dataset('sampleCountryApiOfCodeResponseArrays', function () {
+    return [
+        'searchTermGB' => [
+            'gb',
+            [
+                'get' => 'countries',
+                'parameters' => [
+                    'code' => 'gb',
+                ],
+                'errors' => [],
+                'results' => 1,
+                'paging' => [
+                    'current' => 1,
+                    'total' => 1,
+                ],
+                'response' => [
+                    [
+                        'name' => 'England',
+                        'code' => 'GB',
+                        'flag' => 'https://media.api-sports.io/flags/gb.svg',
+                    ],
+                ],
+            ],
+        ],
+        'searchTermFR' => [
+            'fr',
+            [
+                'get' => 'countries',
+                'parameters' => [
+                    'code' => 'fr',
+                ],
+                'errors' => [],
+                'results' => 1,
+                'paging' => [
+                    'current' => 1,
+                    'total' => 1,
+                ],
+                'response' => [
+                    [
+                        'name' => 'France',
+                        'code' => 'FR',
+                        'flag' => 'https://media.api-sports.io/flags/fr.svg',
+                    ],
+                ],
+            ],
+        ],
+    ];
+});
 
-    public function sampleCountryApiOfCodeResponseArrays(): array
-    {
-        return [
-            'searchTermGB' => [
-                'gb',
-                [
-                    'get' => 'countries',
-                    'parameters' => [
-                        'code' => 'gb',
-                    ],
-                    'errors' => [],
-                    'results' => 1,
-                    'paging' => [
-                        'current' => 1,
-                        'total' => 1,
-                    ],
-                    'response' => [
-                        [
-                            'name' => 'England',
-                            'code' => 'GB',
-                            'flag' => 'https://media.api-sports.io/flags/gb.svg',
-                        ],
-                    ],
-                ],
-            ],
-            'searchTermFR' => [
-                'fr',
-                [
-                    'get' => 'countries',
-                    'parameters' => [
-                        'code' => 'fr',
-                    ],
-                    'errors' => [],
-                    'results' => 1,
-                    'paging' => [
-                        'current' => 1,
-                        'total' => 1,
-                    ],
-                    'response' => [
-                        [
-                            'name' => 'France',
-                            'code' => 'FR',
-                            'flag' => 'https://media.api-sports.io/flags/fr.svg',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    public function sampleCountryApiAllResponse(): array
-    {
-        return [
-            'allCountriesResponse' => [
-                json_decode(
-                    '{
+dataset('sampleCountryApiAllResponse', function () {
+    return [
+        'allCountriesResponse' => [
+            json_decode(
+                '{
   "get": "countries",
   "parameters": [],
   "errors": [],
@@ -1048,9 +1035,8 @@ class CountriesApiTest extends TestCase
     }
   ]
 }',
-                    true
-                )
-            ]
-        ];
-    }
-}
+                true
+            )
+        ]
+    ];
+});
